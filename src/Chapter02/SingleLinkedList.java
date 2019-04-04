@@ -126,8 +126,27 @@ public class SingleLinkedList {
 	}
 	
 	/*
+	 * 2-1. 중복 없애기
+	 * 버퍼가 없을 떄 (Runner 포인터 사용)
+	 */
+	public void deleteDups2() {
+		node = first;
+		while(node != null) {
+			Node runner = node;
+			while(runner.next != null) {
+				if(runner.next.data == node.data) {
+					runner.next = runner.next.next;
+				} else {
+					runner = runner.next;
+				}
+			}
+			node = node.next;
+		}
+	}
+	
+	/*
 	 * 2-2. 뒤에서 k번째 원소 구하기
-	 * 방법 A: 값을 출력하는 형태로 구현
+	 * 재귀적 방법 (값을 출력하는 형태로 구현)
 	 */
 	public int printKthToLast(Node node, int k) {
 		if(node == null) return 0;
@@ -141,17 +160,50 @@ public class SingleLinkedList {
 	
 	/*
 	 * 2-2. 뒤에서 k번째 원소 구하기
-	 * 방법 B: 참조 사용
+	 * 재귀적 방법(Wrapper 클래스 구현/참조변수 선언)
 	 */
-	/*public Node printKthToLast2(Node node, int k, int idx) {
-		if(node == null) return null;
+	public Node printKthToLast2(Node head, int k, int[] idx) {
+		if(head == null) return null;
 		
-		int idx = printKthToLast(node.next, k, idx);
-		
-	}*/
+		System.out.println(idx[0]);
+		Node node = printKthToLast2(head.next, k, idx);
+		idx[0] = idx[0]+1;
+		if(idx[0] == k) {
+			return head;
+		}
+		return node;
+	}
 	
 	/*
-	 * 2-3. 뒤에서 k번째 원소 구하기
-	 * 방법 B: 참조 사용
+	 * 2-2. 뒤에서 k번째 원소 구하기
+	 * 순환적 방법
 	 */
+	public Node PrintKthToLast3(Node node, int k) {
+		
+		Node priorRunner = first;
+		for(int i=0; i<k; i++) {
+			if(priorRunner == null) return null;
+			priorRunner = priorRunner.next;
+		}
+		
+		node = first;
+		while(priorRunner.next != null) {
+			priorRunner = priorRunner.next;
+			node = node.next;
+		}
+		return node;
+	}
+	
+	/*
+	 * 2-3. 중간 노드 삭제
+	 */
+	public boolean deleteMidNode(Node node) {
+		if(node == null || node.next == null) return false;
+		
+		Node nextNode = node.next;
+		node.next = nextNode.next;
+		node.data = nextNode.data;
+		
+		return true;
+	}
 }
